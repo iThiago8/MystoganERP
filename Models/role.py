@@ -1,12 +1,18 @@
-# Models/role.py
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from Data.database import Base
+from Data.connection import Base
+
 
 class Role(Base):
     __tablename__ = "roles"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True, nullable=False)
+    title = Column(String(100), nullable=False)
+    description = Column(String(255), nullable=True)
+    department_id = Column(Integer, ForeignKey("departments.id"), nullable=False)
 
-    users = relationship("User", back_populates="role")
+    # Um Role pertence a um Department
+    department = relationship("Department", back_populates="roles")
+
+    # Um Role tem muitos Employees
+    employees = relationship("Employee", back_populates="role")

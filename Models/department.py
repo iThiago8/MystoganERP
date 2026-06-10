@@ -1,12 +1,14 @@
-# Models/department.py
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from Data.database import Base
+from Data.connection import Base
+
 
 class Department(Base):
     __tablename__ = "departments"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String(100), nullable=False, unique=True)
+    description = Column(String(255), nullable=True)
 
-    employees = relationship("Employee", back_populates="department")
+    # Um Department tem muitos Roles
+    roles = relationship("Role", back_populates="department")

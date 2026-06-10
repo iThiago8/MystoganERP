@@ -1,16 +1,19 @@
-# Models/employee.py
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, Boolean
 from sqlalchemy.orm import relationship
-from Data.database import Base
+from Data.connection import Base
+
 
 class Employee(Base):
     __tablename__ = "employees"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
-    department_id = Column(Integer, ForeignKey("departments.id"))
+    name = Column(String(150), nullable=False)
+    email = Column(String(150), nullable=False, unique=True)
+    hashed_password = Column(String(255), nullable=False)
+    phone = Column(String(20), nullable=True)
+    hire_date = Column(Date, nullable=True)
+    is_active = Column(Boolean, default=True)
+    role_id = Column(Integer, ForeignKey("roles.id"), nullable=True)
 
-    user = relationship("User", back_populates="employee")
-    department = relationship("Department", back_populates="employees")
+    # Um Employee pertence a um Role
+    role = relationship("Role", back_populates="employees")
