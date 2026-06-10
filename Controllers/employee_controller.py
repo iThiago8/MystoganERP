@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from Services.employee_service import EmployeeService
-from DTOs.employee_dto import EmployeeCreate, EmployeeUpdate, EmployeeResponse
+from DTOs.employee_dto import EmployeeUpdate, EmployeeResponse
 from DTOs.auth_dto import TokenPayload
-from Controllers.dependencies import get_employee_service, get_current_user
+from Controllers.dependencies import get_employee_service, get_current_user, require_hr
 
 router = APIRouter(prefix="/employees", tags=["RH - Funcionários"])
 
@@ -10,7 +10,7 @@ router = APIRouter(prefix="/employees", tags=["RH - Funcionários"])
 @router.get("/", response_model=list[EmployeeResponse])
 def list_employees(
     service: EmployeeService = Depends(get_employee_service),
-    _: TokenPayload = Depends(get_current_user)
+    _: TokenPayload = Depends(require_hr)
 ):
     return service.get_all()
 
@@ -20,7 +20,7 @@ def get_me(
     current_user: TokenPayload = Depends(get_current_user),
     service: EmployeeService = Depends(get_employee_service)
 ):
-    """Retorna os dados do funcionário autenticado."""
+    """Qualquer usuário autenticado pode ver seus próprios dados."""
     return service.get_by_id(current_user.sub)
 
 
@@ -28,18 +28,9 @@ def get_me(
 def get_employee(
     employee_id: int,
     service: EmployeeService = Depends(get_employee_service),
-    _: TokenPayload = Depends(get_current_user)
+    _: TokenPayload = Depends(require_hr)
 ):
     return service.get_by_id(employee_id)
-
-
-@router.post("/", response_model=EmployeeResponse, status_code=status.HTTP_201_CREATED)
-def create_employee(
-    data: EmployeeCreate,
-    service: EmployeeService = Depends(get_employee_service),
-    _: TokenPayload = Depends(get_current_user)
-):
-    return service.create(data)
 
 
 @router.put("/{employee_id}", response_model=EmployeeResponse)
@@ -47,7 +38,7 @@ def update_employee(
     employee_id: int,
     data: EmployeeUpdate,
     service: EmployeeService = Depends(get_employee_service),
-    _: TokenPayload = Depends(get_current_user)
+    _: TokenPayload = Depends(require_hr)
 ):
     return service.update(employee_id, data)
 
@@ -56,6 +47,6 @@ def update_employee(
 def delete_employee(
     employee_id: int,
     service: EmployeeService = Depends(get_employee_service),
-    _: TokenPayload = Depends(get_current_user)
+    _: TokenPayload = Depends(require_hr)
 ):
     service.delete(employee_id)

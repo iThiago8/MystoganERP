@@ -1,10 +1,5 @@
 from fastapi import FastAPI
-from Data.connection import engine, Base
 
-# Importa todos os models para o Base os reconhecer antes de criar as tabelas
-import Models.department
-import Models.role
-import Models.employee
 
 # Importa os controllers
 from Controllers import (
@@ -14,8 +9,6 @@ from Controllers import (
     employee_controller,
 )
 
-# Cria as tabelas no banco se ainda não existirem
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Mystogan ERP",
