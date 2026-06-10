@@ -12,9 +12,6 @@ class EmployeeRepository(IEmployeeRepository):
     def find_by_id(self, employee_id: int) -> Optional[Employee]:
         return self.db.query(Employee).filter(Employee.id == employee_id).first()
 
-    def find_by_email(self, email: str) -> Optional[Employee]:
-        return self.db.query(Employee).filter(Employee.email == email).first()
-
     def find_all(self) -> list[Employee]:
         return self.db.query(Employee).all()
 

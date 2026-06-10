@@ -10,10 +10,6 @@ class IEmployeeRepository(ABC):
         pass
 
     @abstractmethod
-    def find_by_email(self, email: str) -> Optional[Employee]:
-        pass
-
-    @abstractmethod
     def find_all(self) -> list[Employee]:
         pass
 

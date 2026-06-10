@@ -1,30 +1,34 @@
 from fastapi import HTTPException, status
-from Repositories.employee_repository import EmployeeRepository
+from Repositories.user_repository import UserRepository
 from DTOs.auth_dto import LoginRequest, TokenResponse
 from Utils.security import verify_password, create_access_token
 
 
 class AuthService:
 
-    def __init__(self, repository: EmployeeRepository):
+    def __init__(self, repository: UserRepository):
         self.repository = repository
 
     def login(self, data: LoginRequest) -> TokenResponse:
-        employee = self.repository.find_by_email(data.email)
+        user = self.repository.find_by_email(data.email)
 
-        # Mensagem genérica para não revelar se o e-mail existe ou não
-        if not employee or not verify_password(data.password, employee.hashed_password):
+        if not user or not verify_password(data.password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="E-mail ou senha inválidos.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        if not employee.is_active:
+        if not user.is_active:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Conta desativada. Entre em contato com o administrador."
             )
 
-        token = create_access_token(data={"sub": employee.id, "email": employee.email})
+        # Role agora vai dentro do token — não precisa de query extra nas rotas
+        token = create_access_token(data={
+            "sub": user.id,
+            "email": user.email,
+            "role": user.role.value
+        })
         return TokenResponse(access_token=token)
