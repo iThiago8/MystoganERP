@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from Models.Transaction import Transaction
+from Models.transaction import Transaction
 
 
 class TransactionRepository:
