@@ -8,12 +8,15 @@ class Employee(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(150), nullable=False)
-    email = Column(String(150), nullable=False, unique=True)
-    hashed_password = Column(String(255), nullable=False)
     phone = Column(String(20), nullable=True)
     hire_date = Column(Date, nullable=True)
     is_active = Column(Boolean, default=True)
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=True)
 
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, unique=True)
+    user = relationship("User", back_populates="employee")
+
     # Um Employee pertence a um Role
+    role_id = Column(Integer, ForeignKey("roles.id"), nullable=True)
     role = relationship("Role", back_populates="employees")

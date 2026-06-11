@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-
+from Models.user import UserRole
 
 # O que o cliente envia no login
 class LoginRequest(BaseModel):
@@ -17,3 +17,4 @@ class TokenResponse(BaseModel):
 class TokenPayload(BaseModel):
     sub: int        # employee_id
     email: str
+    role: UserRole
