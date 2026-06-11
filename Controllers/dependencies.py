@@ -6,10 +6,14 @@ from Repositories.user_repository import UserRepository
 from Repositories.employee_repository import EmployeeRepository
 from Repositories.role_repository import RoleRepository
 from Repositories.department_repository import DepartmentRepository
+from Repositories.product_repository import ProductRepository
+from Repositories.stock_movement_repository import StockMovementRepository
 from Services.auth_service import AuthService
 from Services.employee_service import EmployeeService
 from Services.role_service import RoleService
 from Services.department_service import DepartmentService
+from Services.product_service import ProductService
+from Services.stock_movement_service import StockMovementService
 from DTOs.auth_dto import TokenPayload
 from Models.user import UserRole
 from Utils.security import decode_access_token
@@ -36,6 +40,14 @@ def get_department_service(db: Session = Depends(get_db)) -> DepartmentService:
     return DepartmentService(DepartmentRepository(db))
 
 
+def get_product_service(db: Session = Depends(get_db)) -> ProductService:
+    return ProductService(ProductRepository(db))
+
+
+def get_stock_movement_service(db: Session = Depends(get_db)) -> StockMovementService:
+    return StockMovementService(StockMovementRepository(db), ProductRepository(db), db)
+
+
 # --- Autenticação ---
 
 def get_current_user(
@@ -60,6 +72,15 @@ def require_hr(current_user: TokenPayload = Depends(get_current_user)) -> TokenP
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Acesso restrito ao setor de RH."
+        )
+    return current_user
+
+
+def require_stock(current_user: TokenPayload = Depends(get_current_user)) -> TokenPayload:
+    if current_user.role not in (UserRole.STOCK, UserRole.ADMIN):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso restrito ao setor de Estoque."
         )
     return current_user
 

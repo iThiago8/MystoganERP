@@ -7,6 +7,8 @@ from Controllers import (
     department_controller,
     role_controller,
     employee_controller,
+    product_controller,
+    stock_movement_controller,
 )
 
 
@@ -21,6 +23,8 @@ app.include_router(auth_controller.router)
 app.include_router(department_controller.router)
 app.include_router(role_controller.router)
 app.include_router(employee_controller.router)
+app.include_router(product_controller.router)
+app.include_router(stock_movement_controller.router)
 
 
 @app.get("/", tags=["Health"])

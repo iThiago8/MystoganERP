@@ -26,8 +26,9 @@ class AuthService:
             )
 
         # Role agora vai dentro do token — não precisa de query extra nas rotas
+        # python-jose exige "sub" como string; Pydantic converte de volta pra int no TokenPayload
         token = create_access_token(data={
-            "sub": user.id,
+            "sub": str(user.id),
             "email": user.email,
             "role": user.role.value
         })
