@@ -8,6 +8,8 @@ import Models.department
 import Models.role
 import Models.employee
 import Models.user
+import Models.product
+import Models.stock_movement
 
 # Cria as tabelas no banco se ainda não existirem
 Base.metadata.create_all(bind=engine)
@@ -22,5 +24,14 @@ else:
     db.add(admin)
     db.commit()
     print("Admin criado!")
+
+existing_stock = db.query(User).filter(User.email == "estoque@empresa.com").first()
+if existing_stock:
+    print("Usuário de estoque já existe, pulando seed.")
+else:
+    stock_user = User(email="estoque@empresa.com", hashed_password=hash_password("estoque123"), role=UserRole.STOCK)
+    db.add(stock_user)
+    db.commit()
+    print("Usuário de estoque criado!")
 
 db.close()
