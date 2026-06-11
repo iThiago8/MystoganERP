@@ -1,8 +1,9 @@
 from sqlalchemy import select
 from Models.transaction import Transaction
+from Interfaces.i_transaction_repository import ITransactionRepository
 
 
-class TransactionRepository:
+class TransactionRepository(ITransactionRepository):
 
     def __init__(self, session):
         self.session = session

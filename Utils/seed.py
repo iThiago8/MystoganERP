@@ -8,6 +8,7 @@ import Models.department
 import Models.role
 import Models.employee
 import Models.user
+import Models.transaction
 
 # Cria as tabelas no banco se ainda não existirem
 Base.metadata.create_all(bind=engine)
@@ -18,7 +19,8 @@ existing = db.query(User).filter(User.email == "admin@empresa.com").first()
 if existing:
     print("Admin já existe, pulando seed.")
 else:
-    admin = User(email="admin@empresa.com", hashed_password=hash_password("admin123"), role=UserRole.ADMIN)
+    admin = User(email="admin@empresa.com",
+                 hashed_password=hash_password("admin123"), role=UserRole.ADMIN)
     db.add(admin)
     db.commit()
     print("Admin criado!")
