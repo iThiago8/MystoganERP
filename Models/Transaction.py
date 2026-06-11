@@ -3,10 +3,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from datetime import date
 from datetime import datetime
 from decimal import Decimal
-
-
-class Base(DeclarativeBase):
-    pass
+from Data.connection import Base
 
 
 class Transaction(Base):
