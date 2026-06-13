@@ -9,6 +9,7 @@ class CreateTransactionDTO(BaseModel):
     transaction_type: str
     amount: Decimal
     transaction_date: date
+    category: str
 
 
 class UpdateTransactionDTO(BaseModel):

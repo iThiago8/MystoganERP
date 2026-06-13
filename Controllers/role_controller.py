@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from Services.role_service import RoleService
 from DTOs.role_dto import RoleCreate, RoleUpdate, RoleResponse
 from DTOs.auth_dto import TokenPayload
-from Controllers.dependencies import get_role_service, get_current_user
+from Config.dependencies import get_role_service, get_current_user
 
 router = APIRouter(prefix="/roles", tags=["RH - Cargos"])
 

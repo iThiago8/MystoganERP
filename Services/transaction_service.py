@@ -1,6 +1,7 @@
 from Repositories.transaction_repository import TransactionRepository
 from Models.transaction import Transaction
-from sqlalchemy import Decimal
+from decimal import Decimal
+from DTOs.transaction_dto import CreateTransactionDTO
 
 
 class TransactionService:
@@ -11,7 +12,15 @@ class TransactionService:
     ):
         self.transaction_repository = transaction_repository
 
-    def create_transaction(self, transaction):
+    def create_transaction(self, transaction_dto: CreateTransactionDTO) -> Transaction:
+
+        transaction = Transaction(
+            description=transaction_dto.description,
+            transaction_type=transaction_dto.transaction_type,
+            amount=transaction_dto.amount,
+            transaction_date=transaction_dto.transaction_date,
+            category=transaction_dto.category
+        )
 
         if transaction.amount <= 0:
             raise ValueError("O valor da transação deve ser maior que zero")
@@ -21,20 +30,20 @@ class TransactionService:
 
         return self.transaction_repository.create(transaction)
 
-    def get_all(self):
+    def get_all(self) -> list[Transaction]:
         return self.transaction_repository.get_all()
 
-    def get_by_id(self, transaction_id):
+    def get_by_id(self, transaction_id: int) -> Transaction:
 
         result = self.transaction_repository.get_by_id(transaction_id)
 
         if result is None:
             raise ValueError(
-                f"A transação de ID{transaction_id} não foi encontrada")
+                f"A transação de ID {transaction_id} não foi encontrada")
 
         return result
 
-    def calculate_total_expenses(self):
+    def calculate_total_expenses(self) -> Decimal:
         transactions = self.transaction_repository.get_all()
         total_expenses = Decimal("0")
 
@@ -44,7 +53,7 @@ class TransactionService:
 
         return total_expenses
 
-    def calculate_total_incomes(self):
+    def calculate_total_incomes(self) -> Decimal:
         transactions = self.transaction_repository.get_all()
         total_incomes = Decimal("0")
 
@@ -54,6 +63,6 @@ class TransactionService:
 
         return total_incomes
 
-    def calculatel_balance(self):
+    def calculate_balance(self) -> Decimal:
 
         return self.calculate_total_incomes() - self.calculate_total_expenses()

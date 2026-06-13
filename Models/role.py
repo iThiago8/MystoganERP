@@ -9,7 +9,8 @@ class Role(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(100), nullable=False)
     description = Column(String(255), nullable=True)
-    department_id = Column(Integer, ForeignKey("departments.id"), nullable=False)
+    department_id = Column(Integer, ForeignKey(
+        "departments.id"), nullable=False)
 
     # Um Role pertence a um Department
     department = relationship("Department", back_populates="roles")
