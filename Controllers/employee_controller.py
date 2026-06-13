@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from Services.employee_service import EmployeeService
 from DTOs.employee_dto import EmployeeUpdate, EmployeeResponse
 from DTOs.auth_dto import TokenPayload
-from Controllers.dependencies import get_employee_service, get_current_user, require_hr
+from Config.dependencies import get_employee_service, get_current_user, require_hr
 
 router = APIRouter(prefix="/employees", tags=["RH - Funcionários"])
 
