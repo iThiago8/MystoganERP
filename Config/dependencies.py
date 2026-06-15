@@ -7,22 +7,16 @@ from Repositories.user_repository import UserRepository
 from Repositories.employee_repository import EmployeeRepository
 from Repositories.role_repository import RoleRepository
 from Repositories.department_repository import DepartmentRepository
-<<<<<<< HEAD:Controllers/dependencies.py
 from Repositories.product_repository import ProductRepository
 from Repositories.stock_movement_repository import StockMovementRepository
-=======
 from Repositories.transaction_repository import TransactionRepository
->>>>>>> GadeiaBranch:Config/dependencies.py
 from Services.auth_service import AuthService
 from Services.employee_service import EmployeeService
 from Services.role_service import RoleService
 from Services.department_service import DepartmentService
-<<<<<<< HEAD:Controllers/dependencies.py
 from Services.product_service import ProductService
 from Services.stock_movement_service import StockMovementService
-=======
 from Services.transaction_service import TransactionService
->>>>>>> GadeiaBranch:Config/dependencies.py
 from DTOs.auth_dto import TokenPayload
 from Models.user import UserRole
 from Utils.security import decode_access_token

@@ -17,6 +17,14 @@ def get_all_transactions(
     return service.get_all()
 
 
+@router.get("/{transaction_id}", response_model=TransactionResponseDTO)
+def get_transaction_by_id(
+    transaction_id: int,
+    service: TransactionService = Depends(get_transaction_service)
+):
+    return service.get_by_id(transaction_id)
+
+
 @router.post("/")
 def create_transaction(
     transaction: CreateTransactionDTO,

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from Services.product_service import ProductService
 from DTOs.product_dto import ProductCreate, ProductUpdate, ProductResponse
 from DTOs.auth_dto import TokenPayload
-from Controllers.dependencies import get_product_service, require_stock
+from Config.dependencies import get_product_service, require_stock
 
 router = APIRouter(prefix="/products", tags=["Estoque - Produtos"])
 

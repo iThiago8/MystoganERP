@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from Services.stock_movement_service import StockMovementService
 from DTOs.stock_movement_dto import StockMovementCreate, StockMovementResponse
 from DTOs.auth_dto import TokenPayload
-from Controllers.dependencies import get_stock_movement_service, require_stock
+from Config.dependencies import get_stock_movement_service, require_stock
 
 router = APIRouter(prefix="/stock-movements", tags=["Estoque - Movimentações"])
 
