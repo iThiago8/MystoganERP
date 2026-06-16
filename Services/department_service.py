@@ -1,12 +1,12 @@
 from fastapi import HTTPException, status
-from Repositories.department_repository import DepartmentRepository
+from Interfaces.i_department_repository import IDepartmentRepository
 from DTOs.department_dto import DepartmentCreate, DepartmentUpdate
 from Models.department import Department
 
 
 class DepartmentService:
 
-    def __init__(self, repository: DepartmentRepository):
+    def __init__(self, repository: IDepartmentRepository):
         self.repository = repository
 
     def get_all(self) -> list[Department]:
@@ -28,7 +28,9 @@ class DepartmentService:
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"Já existe um departamento com o nome '{data.name}'."
             )
+        
         department = Department(**data.model_dump())
+
         return self.repository.save(department)
 
     def update(self, department_id: int, data: DepartmentUpdate) -> Department:
