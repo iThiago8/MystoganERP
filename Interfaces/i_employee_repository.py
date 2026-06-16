@@ -9,6 +9,12 @@ class IEmployeeRepository(ABC):
     def find_by_id(self, employee_id: int) -> Optional[Employee]:
         pass
 
+
+    @abstractmethod
+    def find_by_user_id(self, user_id: int) -> Optional[Employee]:
+        pass
+    
+
     @abstractmethod
     def find_all(self) -> list[Employee]:
         pass

@@ -9,6 +9,12 @@ class IDepartmentRepository(ABC):
     def find_by_id(self, department_id: int) -> Optional[Department]:
         pass
 
+
+    @abstractmethod
+    def find_by_name(self, department_name: str) -> Optional[Department]:
+        pass
+
+
     @abstractmethod
     def find_all(self) -> list[Department]:
         pass

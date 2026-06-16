@@ -1,13 +1,13 @@
 from fastapi import HTTPException, status
-from Repositories.role_repository import RoleRepository
-from Repositories.department_repository import DepartmentRepository
+from Interfaces.i_role_repository import IRoleRepository
+from Interfaces.i_department_repository import IDepartmentRepository
 from DTOs.role_dto import RoleCreate, RoleUpdate
 from Models.role import Role
 
 
 class RoleService:
 
-    def __init__(self, repository: RoleRepository, department_repository: DepartmentRepository):
+    def __init__(self, repository: IRoleRepository, department_repository: IDepartmentRepository):
         self.repository = repository
         self.department_repository = department_repository
 

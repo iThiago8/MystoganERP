@@ -15,6 +15,6 @@ class TokenResponse(BaseModel):
 
 # Dados do usuário extraídos do token JWT (usado internamente)
 class TokenPayload(BaseModel):
-    sub: int        # employee_id
+    sub: int        # user_id
     email: str
     role: UserRole
