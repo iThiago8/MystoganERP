@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from DTOs.transaction_dto import TransactionResponseDTO, UpdateTransactionDTO, CreateTransactionDTO
 from Services.transaction_service import TransactionService
 from Models.transaction import Transaction
@@ -32,3 +32,13 @@ def create_transaction(
 ):
 
     return service.create_transaction(transaction)
+
+
+@router.delete("/{transaction_id}",
+               status_code=status.HTTP_204_NO_CONTENT)
+def delete_transaction(
+    transaction_id: int,
+    service: TransactionService = Depends(get_transaction_service)
+):
+
+    service.delete(transaction_id)

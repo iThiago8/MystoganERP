@@ -66,3 +66,6 @@ class TransactionService:
     def calculate_balance(self) -> Decimal:
 
         return self.calculate_total_incomes() - self.calculate_total_expenses()
+
+    def delete(self, transaction_id: int) -> bool:
+        return self.transaction_repository.delete(transaction_id)
