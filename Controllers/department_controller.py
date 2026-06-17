@@ -3,6 +3,7 @@ from Services.department_service import DepartmentService
 from DTOs.department_dto import DepartmentCreate, DepartmentUpdate, DepartmentResponse
 from DTOs.auth_dto import TokenPayload
 from Config.dependencies import get_department_service, get_current_user
+from DTOs.auth_dto import TokenPayload
 
 router = APIRouter(prefix="/departments", tags=["RH - Departamentos"])
 

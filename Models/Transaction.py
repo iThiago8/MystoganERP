@@ -41,5 +41,5 @@ class Transaction(Base):
 
     category: Mapped[str] = mapped_column(
         String(50),
-        nullable=True
+        nullable=False
     )

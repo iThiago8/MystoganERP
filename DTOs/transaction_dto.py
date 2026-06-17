@@ -17,6 +17,7 @@ class UpdateTransactionDTO(BaseModel):
     transaction_type: str
     amount: Decimal
     transaction_date: date
+    category: str
 
 
 class TransactionResponseDTO(BaseModel):
@@ -25,4 +26,5 @@ class TransactionResponseDTO(BaseModel):
     transaction_type: str
     amount: Decimal
     transaction_date: date
+    category: str
     created_at: datetime

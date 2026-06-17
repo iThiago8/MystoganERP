@@ -18,9 +18,9 @@ class ITransactionRepository(ABC):
         pass
 
     @abstractmethod
-    def create(self, transaction: Transaction) -> Transaction:
+    def delete(self, transaction: Transaction) -> bool:
         pass
 
     @abstractmethod
-    def delete(self, transaction: Transaction) -> bool:
+    def update(self, transaction: Transaction) -> Transaction:
         pass

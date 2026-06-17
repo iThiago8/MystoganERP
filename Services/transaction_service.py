@@ -1,14 +1,15 @@
 from Repositories.transaction_repository import TransactionRepository
 from Models.transaction import Transaction
 from decimal import Decimal
-from DTOs.transaction_dto import CreateTransactionDTO
+from DTOs.transaction_dto import CreateTransactionDTO, TransactionResponseDTO, UpdateTransactionDTO
+from Interfaces import i_transaction_repository
 
 
 class TransactionService:
 
     def __init__(
         self,
-        transaction_repository: TransactionRepository
+        transaction_repository: i_transaction_repository
     ):
         self.transaction_repository = transaction_repository
 
@@ -29,6 +30,21 @@ class TransactionService:
             raise ValueError("O tipo da transação deve ser RECEITA ou DESPESA")
 
         return self.transaction_repository.create(transaction)
+
+    def update_transaction(self, transaction_id: int, transaction_dto: UpdateTransactionDTO) -> Transaction:
+        transaction = self.transaction_repository.get_by_id(transaction_id)
+
+        if transaction is None:
+            raise ValueError(
+                f"Transação com ID {transaction_id} não encontrada")
+
+        transaction.description = transaction_dto.description
+        transaction.transaction_type = transaction_dto.transaction_type
+        transaction.amount = transaction_dto.amount
+        transaction.transaction_date = transaction_dto.transaction_date
+        transaction.category = transaction_dto.category
+
+        return self.transaction_repository.update(transaction)
 
     def get_all(self) -> list[Transaction]:
         return self.transaction_repository.get_all()
