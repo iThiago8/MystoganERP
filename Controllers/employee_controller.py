@@ -21,7 +21,8 @@ def get_me(
     service: EmployeeService = Depends(get_employee_service)
 ):
     """Qualquer usuário autenticado pode ver seus próprios dados."""
-    return service.get_by_id(current_user.sub)
+
+    return service.get_by_user_id(current_user.sub)
 
 
 @router.get("/{employee_id}", response_model=EmployeeResponse)

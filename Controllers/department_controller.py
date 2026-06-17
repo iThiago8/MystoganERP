@@ -5,7 +5,12 @@ from DTOs.auth_dto import TokenPayload
 from Config.dependencies import get_department_service, get_current_user
 from DTOs.auth_dto import TokenPayload
 
+from Config.dependencies import RoleChecker
+from Models.user import UserRole
+
 router = APIRouter(prefix="/departments", tags=["RH - Departamentos"])
+
+require_admin = RoleChecker([UserRole.ADMIN])
 
 
 @router.get("/", response_model=list[DepartmentResponse])
@@ -29,7 +34,7 @@ def get_department(
 def create_department(
     data: DepartmentCreate,
     service: DepartmentService = Depends(get_department_service),
-    _: TokenPayload = Depends(get_current_user)
+    _: TokenPayload = Depends(require_admin)
 ):
     return service.create(data)
 
@@ -39,7 +44,7 @@ def update_department(
     department_id: int,
     data: DepartmentUpdate,
     service: DepartmentService = Depends(get_department_service),
-    _: TokenPayload = Depends(get_current_user)
+    _: TokenPayload = Depends(require_admin)
 ):
     return service.update(department_id, data)
 
@@ -48,6 +53,6 @@ def update_department(
 def delete_department(
     department_id: int,
     service: DepartmentService = Depends(get_department_service),
-    _: TokenPayload = Depends(get_current_user)
+    _: TokenPayload = Depends(require_admin)
 ):
     service.delete(department_id)
