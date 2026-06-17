@@ -1,12 +1,12 @@
 from fastapi import HTTPException, status
-from Repositories.product_repository import ProductRepository
+from Interfaces.i_product_repository import IProductRepository
 from DTOs.product_dto import ProductCreate, ProductUpdate
 from Models.product import Product
 
 
 class ProductService:
 
-    def __init__(self, repository: ProductRepository):
+    def __init__(self, repository: IProductRepository):
         self.repository = repository
 
     def get_all(self) -> list[Product]:

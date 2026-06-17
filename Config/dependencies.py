@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import Depends, HTTPException, status, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
@@ -104,3 +105,16 @@ def get_transaction_repository(db: Session = Depends(get_db)) -> TransactionRepo
 def get_transaction_service(repository: TransactionRepository = Depends(get_transaction_repository)) -> TransactionService:
 
     return TransactionService(repository)
+
+
+class RoleChecker:
+    def __init__(self, allowed_roles: List[UserRole]):
+        self.allowed_roles = allowed_roles
+
+    def __call__(self, user_payload: TokenPayload = Depends(get_current_user)):
+        if user_payload.role not in self.allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Operação não permitida. Privilégios insuficientes."
+            )
+        return user_payload
