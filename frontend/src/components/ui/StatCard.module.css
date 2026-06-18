@@ -1,0 +1,71 @@
+.stat {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+.stat:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-default);
+}
+
+.iconWrap {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--bg-hover-soft);
+  color: var(--accent-gold);
+}
+
+.default {
+}
+
+.gold .iconWrap {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+}
+
+.danger .iconWrap {
+  background: var(--accent-danger-soft);
+  color: var(--accent-danger);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.trend {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.trend.up {
+  color: var(--accent-success);
+}
+
+.trend.down {
+  color: var(--accent-danger);
+}

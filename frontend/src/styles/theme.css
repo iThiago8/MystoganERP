@@ -1,0 +1,60 @@
+/* ============================================================
+   MYSTOGAN ERP — THEME TOKENS
+   Paleta oficial + tokens semânticos usados em todo o frontend.
+   Importe este arquivo uma única vez (em src/App.jsx).
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  /* ---- Paleta oficial Mystogan ERP (não alterar os hex) ---- */
+  --mystogan-bg: #050B16;        /* Preto azulado — fundo principal */
+  --mystogan-sidebar: #0D1B2A;   /* Azul petróleo escuro — sidebar/navbar */
+  --mystogan-hover: #1B4332;     /* Verde escuro místico — hover/destaques */
+  --mystogan-secondary: #3A5A40; /* Verde acinzentado — botões secundários */
+  --mystogan-text: #F1F5F9;      /* Branco gelo — texto principal */
+  --mystogan-border: #D9E2EC;    /* Cinza claro — bordas/cards */
+  --mystogan-danger: #C1121F;    /* Vermelho rubi — alertas */
+  --mystogan-gold: #D4A017;      /* Dourado premium — destaques especiais */
+
+  /* ---- Tokens semânticos (use estes nos componentes) ---- */
+  --bg-app: var(--mystogan-bg);
+  --bg-surface: #0A1322;
+  --bg-surface-raised: #0F1B2D;
+  --bg-sidebar: var(--mystogan-sidebar);
+  --bg-hover: var(--mystogan-hover);
+  --bg-hover-soft: rgba(27, 67, 50, 0.35);
+
+  --text-primary: var(--mystogan-text);
+  --text-secondary: rgba(241, 245, 249, 0.64);
+  --text-muted: rgba(241, 245, 249, 0.4);
+  --text-on-accent: #050B16;
+
+  --border-subtle: rgba(217, 226, 236, 0.08);
+  --border-default: rgba(217, 226, 236, 0.16);
+  --border-strong: rgba(217, 226, 236, 0.28);
+
+  --accent-secondary: var(--mystogan-secondary);
+  --accent-gold: var(--mystogan-gold);
+  --accent-gold-soft: rgba(212, 160, 23, 0.16);
+  --accent-danger: var(--mystogan-danger);
+  --accent-danger-soft: rgba(193, 18, 31, 0.16);
+  --accent-success: #2D9D67;
+  --accent-success-soft: rgba(45, 157, 103, 0.16);
+
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --sidebar-width: 264px;
+  --sidebar-width-collapsed: 76px;
+  --header-height: 64px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+
+  --transition-base: 180ms ease;
+}

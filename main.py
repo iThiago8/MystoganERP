@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 
 # Importa os controllers
@@ -32,3 +33,14 @@ app.include_router(transaction_controller.router)
 @app.get("/", tags=["Health"])
 def health_check():
     return {"status": "ok", "message": "ERP online"}
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

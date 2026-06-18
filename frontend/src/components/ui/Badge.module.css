@@ -1,0 +1,31 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.default {
+  background: var(--bg-hover-soft);
+  color: var(--text-secondary);
+}
+
+.success {
+  background: var(--accent-success-soft);
+  color: var(--accent-success);
+}
+
+.gold {
+  background: var(--accent-gold-soft);
+  color: var(--accent-gold);
+}
+
+.danger {
+  background: var(--accent-danger-soft);
+  color: var(--accent-danger);
+}

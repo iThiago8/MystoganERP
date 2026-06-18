@@ -14,7 +14,7 @@ router = APIRouter(
 @router.get("/", response_model=list[TransactionResponseDTO])
 def get_all_transactions(
     service: TransactionService = Depends(get_transaction_service),
-    _: TokenPayload = Depends(get_current_user)
+    # _: TokenPayload = Depends(get_current_user)
 ):
     return service.get_all()
 
@@ -23,7 +23,7 @@ def get_all_transactions(
 def get_transaction_by_id(
     transaction_id: int,
     service: TransactionService = Depends(get_transaction_service),
-    _: TokenPayload = Depends(get_current_user)
+    # _: TokenPayload = Depends(get_current_user)
 ):
     return service.get_by_id(transaction_id)
 
@@ -36,7 +36,7 @@ def get_transaction_by_id(
 def create_transaction(
     transaction: CreateTransactionDTO,
     service: TransactionService = Depends(get_transaction_service),
-    _: TokenPayload = Depends(get_current_user)
+    # _: TokenPayload = Depends(get_current_user)
 ):
     return service.create_transaction(transaction)
 
@@ -48,7 +48,7 @@ def create_transaction(
 def delete_transaction(
     transaction_id: int,
     service: TransactionService = Depends(get_transaction_service),
-    _: TokenPayload = Depends(get_current_user)
+    # _: TokenPayload = Depends(get_current_user)
 ):
     service.delete(transaction_id)
 
@@ -61,6 +61,6 @@ def update_transaction(
     transaction_id: int,
     transaction: UpdateTransactionDTO,
     service: TransactionService = Depends(get_transaction_service),
-    _: TokenPayload = Depends(get_current_user)
+    # _: TokenPayload = Depends(get_current_user)
 ):
     return service.update_transaction(transaction_id, transaction)
