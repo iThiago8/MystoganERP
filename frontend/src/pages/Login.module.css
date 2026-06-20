@@ -1,0 +1,98 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: var(--bg-app);
+  padding: 24px;
+}
+
+.panel {
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  padding: 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brandMark {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent-gold), var(--mystogan-hover));
+  color: var(--text-on-accent);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.brandName,
+.brandTag {
+  display: block;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.brandTag {
+  color: var(--text-muted);
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.field input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-raised);
+  color: var(--text-primary);
+  font: inherit;
+  padding: 10px 12px;
+}
+
+.field input:focus {
+  border-color: var(--accent-gold);
+}
+
+.error {
+  border: 1px solid rgba(193, 18, 31, 0.28);
+  border-radius: var(--radius-sm);
+  background: var(--accent-danger-soft);
+  color: var(--accent-danger);
+  font-size: 13px;
+  padding: 10px 12px;
+}

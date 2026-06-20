@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import {
   FiGrid,
   FiDollarSign,
-  FiBox,
+  FiTruck,
   FiPackage,
   FiUsers,
   FiSettings,
@@ -12,13 +12,28 @@ import {
 } from 'react-icons/fi';
 import styles from './Sidebar.module.css';
 
-const NAV_ITEMS = [
-  { to: '/', label: 'Dashboard', icon: FiGrid, end: true },
-  { to: '/financeiro', label: 'Financeiro', icon: FiDollarSign },
-  { to: '/produtos', label: 'Produtos', icon: FiBox },
-  { to: '/estoque', label: 'Estoque', icon: FiPackage },
-  { to: '/funcionarios', label: 'Funcionários', icon: FiUsers },
-  { to: '/configuracoes', label: 'Configurações', icon: FiSettings },
+const NAV_GROUPS = [
+  {
+    items: [{ to: '/', label: 'Dashboard', icon: FiGrid, end: true }],
+  },
+  {
+    title: 'Logística',
+    items: [
+      { to: '/estoque', label: 'Estoque', icon: FiPackage },
+      { to: '/logistica', label: 'Entregas', icon: FiTruck },
+    ],
+  },
+  {
+    title: 'Financeiro',
+    items: [{ to: '/financeiro', label: 'Financeiro', icon: FiDollarSign }],
+  },
+  {
+    title: 'Gestão',
+    items: [
+      { to: '/funcionarios', label: 'Funcionários', icon: FiUsers },
+      { to: '/configuracoes', label: 'Configurações', icon: FiSettings },
+    ],
+  },
 ];
 
 export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
@@ -42,21 +57,32 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
       </div>
 
       <nav className={styles.nav}>
-        {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
-            }
-            title={collapsed ? label : undefined}
-          >
-            <span className={styles.navIcon}>
-              <Icon size={18} />
-            </span>
-            {!collapsed && <span className={styles.navLabel}>{label}</span>}
-          </NavLink>
+        {NAV_GROUPS.map((group, index) => (
+          <div key={group.title ?? `group-${index}`} className={styles.navSection}>
+            {group.title &&
+              (collapsed ? (
+                <span className={styles.navDivider} aria-hidden="true" />
+              ) : (
+                <span className={styles.navSectionLabel}>{group.title}</span>
+              ))}
+
+            {group.items.map(({ to, label, icon: Icon, end }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                className={({ isActive }) =>
+                  `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
+                }
+                title={collapsed ? label : undefined}
+              >
+                <span className={styles.navIcon}>
+                  <Icon size={18} />
+                </span>
+                {!collapsed && <span className={styles.navLabel}>{label}</span>}
+              </NavLink>
+            ))}
+          </div>
         ))}
       </nav>
 

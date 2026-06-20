@@ -1,17 +1,16 @@
-from sqlalchemy import String, Numeric, Date, DateTime, func
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
+
+from sqlalchemy import Date, DateTime, Numeric, String, func
+from sqlalchemy.orm import Mapped, mapped_column
+
 from Data.connection import Base
 
 
 class Transaction(Base):
     __tablename__ = "transactions"
 
-    id: Mapped[int] = mapped_column(
-        primary_key=True
-    )
+    id: Mapped[int] = mapped_column(primary_key=True)
 
     description: Mapped[str] = mapped_column(
         String(250),

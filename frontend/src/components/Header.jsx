@@ -1,7 +1,11 @@
-import { FiMenu, FiSearch, FiBell, FiChevronDown } from 'react-icons/fi';
+import { FiBell, FiLogOut, FiMenu, FiSearch } from 'react-icons/fi';
+import { useAuth } from '../auth/useAuth';
 import styles from './Header.module.css';
 
 export default function Header({ title, onOpenMobile }) {
+  const { user, logout } = useAuth();
+  const initials = user?.email?.slice(0, 2).toUpperCase() || 'ME';
+
   return (
     <header className={styles.header}>
       <div className={styles.left}>
@@ -24,13 +28,16 @@ export default function Header({ title, onOpenMobile }) {
 
         <div className={styles.divider} />
 
-        <button className={styles.user}>
-          <div className={styles.avatar}>MS</div>
+        <div className={styles.user}>
+          <div className={styles.avatar}>{initials}</div>
           <div className={styles.userInfo}>
-            <span className={styles.userName}>Mystogan Admin</span>
-            <span className={styles.userRole}>Administrador</span>
+            <span className={styles.userName}>{user?.email || 'Usuário'}</span>
+            <span className={styles.userRole}>{user?.roleLabel || 'Acesso'}</span>
           </div>
-          <FiChevronDown size={14} />
+        </div>
+
+        <button className={styles.iconBtn} onClick={logout} aria-label="Sair">
+          <FiLogOut size={18} />
         </button>
       </div>
     </header>

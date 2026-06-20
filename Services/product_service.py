@@ -12,6 +12,9 @@ class ProductService:
     def get_all(self) -> list[Product]:
         return self.repository.find_all()
 
+    def get_low_stock(self) -> list[Product]:
+        return self.repository.find_low_stock()
+
     def get_by_id(self, product_id: int) -> Product:
         product = self.repository.find_by_id(product_id)
         if not product:
@@ -43,4 +46,6 @@ class ProductService:
 
     def delete(self, product_id: int) -> None:
         product = self.get_by_id(product_id)
-        self.repository.delete(product)
+
+        product.is_active = False
+        self.repository.save(product)

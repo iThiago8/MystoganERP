@@ -18,6 +18,14 @@ class IProductRepository(ABC):
         pass
 
     @abstractmethod
+    def find_low_stock(self) -> list[Product]:
+        pass
+
+    @abstractmethod
+    def has_dependencies(self, product_id: int) -> bool:
+        pass
+
+    @abstractmethod
     def save(self, product: Product) -> Product:
         pass
 
