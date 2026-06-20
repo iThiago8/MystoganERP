@@ -7,8 +7,8 @@ import styles from './Layout.module.css';
 const PAGE_TITLES = {
   '/': 'Dashboard',
   '/financeiro': 'Financeiro',
-  '/produtos': 'Produtos',
   '/estoque': 'Estoque',
+  '/logistica': 'Logística',
   '/funcionarios': 'Funcionários',
   '/configuracoes': 'Configurações',
 };
@@ -28,12 +28,10 @@ export default function Layout() {
   useEffect(() => {
     try {
       localStorage.setItem('mystogan:sidebar-collapsed', collapsed ? '1' : '0');
-    } catch {}
+    } catch {
+      return;
+    }
   }, [collapsed]);
-
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
 
   const title = PAGE_TITLES[location.pathname] ?? 'Mystogan ERP';
 

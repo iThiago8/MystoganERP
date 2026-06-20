@@ -1,208 +1,269 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FiArrowDownRight,
+  FiArrowUpRight,
+  FiDollarSign,
+  FiList,
+  FiPlus,
+  FiRefreshCw,
+  FiTrendingDown,
+  FiTrendingUp,
+} from "react-icons/fi";
+
 import api from "../services/api";
+import Badge from "../components/ui/Badge";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import Modal from "../components/ui/Modal";
+import StatCard from "../components/ui/StatCard";
+import styles from "./Transactions.module.css";
+
+const CATEGORIES = [
+  { label: "Vendas", value: "SALES" },
+  { label: "Compras", value: "PURCHASES" },
+  { label: "Salários", value: "PAYROLL" },
+  { label: "Impostos", value: "TAXES" },
+  { label: "Marketing", value: "MARKETING" },
+  { label: "Tecnologia", value: "TECHNOLOGY" },
+  { label: "Transporte", value: "TRANSPORT" },
+  { label: "Alimentação", value: "FOOD" },
+  { label: "Escritório", value: "OFFICE" },
+  { label: "Outros", value: "OTHER" },
+];
+
+const emptyForm = {
+  description: "",
+  transaction_type: "",
+  amount: "",
+  category: "",
+  transaction_date: "",
+};
+
+const currency = new Intl.NumberFormat("pt-BR", {
+  style: "currency",
+  currency: "BRL",
+});
 
 export default function Transactions() {
+  const [transactions, setTransactions] = useState([]);
+  const [form, setForm] = useState(emptyForm);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-    const [transactions, setTransactions] = useState([]);
+  const getCategoryLabel = useCallback((value) => {
+    const found = CATEGORIES.find((cat) => cat.value === value);
+    return found ? found.label : value;
+  }, []);
 
-    const [description, setDescription] = useState("");
-    const [transactionType, setTransactionType] = useState("");
-    const [amount, setAmount] = useState("");
-    const [category, setCategory] = useState("");
-    const [transactionDate, setTransactionDate] = useState("");
+  const getErrorMessage = useCallback((err) => {
+    if (err?.response?.status === 401 || err?.response?.status === 403) {
+      return "Faça login com um usuário autorizado para o financeiro.";
+    }
+    return err?.response?.data?.detail || "Não foi possível concluir a operação.";
+  }, []);
 
-    const categories = [
-        { label: "Vendas", value: "SALES" },
-        { label: "Compras", value: "PURCHASES" },
-        { label: "Salários", value: "PAYROLL" },
-        { label: "Impostos", value: "TAXES" },
-        { label: "Marketing", value: "MARKETING" },
-        { label: "Tecnologia", value: "TECHNOLOGY" },
-        { label: "Transporte", value: "TRANSPORT" },
-        { label: "Alimentação", value: "FOOD" },
-        { label: "Escritório", value: "OFFICE" },
-        { label: "Outros", value: "OTHER" }
-    ];
+  const loadTransactions = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await api.get("/transactions/");
+      setTransactions(response.data);
+      setError("");
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }, [getErrorMessage]);
 
-    const getCategoryLabel = (value) => {
-        const category = categories.find(
-            (cat) => cat.value === value
-        );
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadTransactions();
+    }, 0);
 
-        return category ? category.label : value;
+    return () => clearTimeout(timer);
+  }, [loadTransactions]);
 
-    };
+  const { receitas, despesas, saldo } = useMemo(() => {
+    const receitas = transactions
+      .filter((t) => t.transaction_type === "INCOME")
+      .reduce((acc, t) => acc + Number(t.amount), 0);
+    const despesas = transactions
+      .filter((t) => t.transaction_type === "EXPENSE")
+      .reduce((acc, t) => acc + Number(t.amount), 0);
+    return { receitas, despesas, saldo: receitas - despesas };
+  }, [transactions]);
 
-    useEffect(() => {
-        loadTransactions();
-    }, []);
+  const updateField = (field) => (event) =>
+    setForm((current) => ({ ...current, [field]: event.target.value }));
 
-    const loadTransactions = () => {
-        api.get("/transactions")
-            .then(response => {
-                setTransactions(response.data);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    };
+  const openModal = () => {
+    setForm(emptyForm);
+    setModalOpen(true);
+  };
 
-    const createTransaction = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setSaving(true);
 
-        try {
-            const response = await api.post("/transactions", {
-                description,
-                transaction_type: transactionType,
-                amount: parseFloat(amount),
-                category,
-                transaction_date: transactionDate
-            });
+    try {
+      const response = await api.post("/transactions/", {
+        description: form.description,
+        transaction_type: form.transaction_type,
+        amount: parseFloat(form.amount),
+        category: form.category,
+        transaction_date: form.transaction_date,
+      });
 
-            setTransactions([...transactions, response.data]);
+      setTransactions((current) => [...current, response.data]);
+      setForm(emptyForm);
+      setModalOpen(false);
+      setSuccess("Transação registrada.");
+      setError("");
+    } catch (err) {
+      setError(getErrorMessage(err));
+      setSuccess("");
+    } finally {
+      setSaving(false);
+    }
+  };
 
-            setDescription("");
-            setTransactionType("");
-            setAmount("");
-            setCategory("");
-            setTransactionDate("");
+  const formatDate = (value) => {
+    if (!value) return "-";
+    const [year, month, day] = String(value).slice(0, 10).split("-");
+    if (!day) return value;
+    return `${day}/${month}/${year}`;
+  };
 
-        } catch (error) {
-            console.error(error);
-        }
+  return (
+    <div className={styles.transactions}>
+      <div className={styles.toolbar}>
+        <p className={styles.helper}>
+          Receitas, despesas e o saldo consolidado da operação.
+        </p>
 
-    };
+        <div className={styles.actions}>
+          <Button variant="ghost" icon={FiRefreshCw} onClick={loadTransactions} disabled={loading}>
+            Atualizar
+          </Button>
+          <Button icon={FiPlus} onClick={openModal}>
+            Nova transação
+          </Button>
+        </div>
+      </div>
 
-    return (
+      {(error || success) && (
+        <div className={`${styles.notice} ${error ? styles.noticeError : styles.noticeSuccess}`}>
+          {error || success}
+        </div>
+      )}
 
-        <div>
+      <div className={styles.statsGrid}>
+        <StatCard icon={FiTrendingUp} label="Receitas" value={currency.format(receitas)} tone="gold" />
+        <StatCard icon={FiTrendingDown} label="Despesas" value={currency.format(despesas)} />
+        <StatCard icon={FiDollarSign} label="Saldo" value={currency.format(saldo)} />
+        <StatCard icon={FiList} label="Transações" value={transactions.length} />
+      </div>
 
-            <h1>Transações</h1>
+      <Card title="Transações" subtitle="Histórico de lançamentos financeiros.">
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((transaction) => {
+                const isIncome = transaction.transaction_type === "INCOME";
+                return (
+                  <tr key={transaction.id}>
+                    <td className={styles.descriptionCell}>{transaction.description}</td>
+                    <td>{getCategoryLabel(transaction.category)}</td>
+                    <td>
+                      <Badge tone={isIncome ? "success" : "danger"}>
+                        {isIncome ? "Receita" : "Despesa"}
+                      </Badge>
+                    </td>
+                    <td>
+                      <span className={`${styles.amount} ${isIncome ? styles.amountIncome : styles.amountExpense}`}>
+                        {isIncome ? <FiArrowUpRight size={13} /> : <FiArrowDownRight size={13} />}
+                        {currency.format(Number(transaction.amount))}
+                      </span>
+                    </td>
+                    <td>{formatDate(transaction.transaction_date)}</td>
+                  </tr>
+                );
+              })}
 
-            <h2>Nova Transação</h2>
+              {!transactions.length && (
+                <tr>
+                  <td colSpan="5" className={styles.emptyCell}>
+                    {loading ? "Carregando transações..." : "Nenhuma transação registrada."}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
 
-            <form onSubmit={createTransaction}>
+      <Modal
+        open={modalOpen}
+        title="Nova transação"
+        subtitle="Registre uma receita ou despesa."
+        onClose={() => setModalOpen(false)}
+      >
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <label className={styles.field}>
+            <span>Descrição</span>
+            <input type="text" value={form.description} onChange={updateField("description")} required />
+          </label>
 
-                <div>
-                    <label>Descrição</label>
-                    <br />
-                    <input
-                        type="text"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                </div>
+          <label className={styles.field}>
+            <span>Categoria</span>
+            <select value={form.category} onChange={updateField("category")} required>
+              <option value="">Selecione</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat.value} value={cat.value}>
+                  {cat.label}
+                </option>
+              ))}
+            </select>
+          </label>
 
-                <br />
+          <div className={styles.twoColumns}>
+            <label className={styles.field}>
+              <span>Tipo</span>
+              <select value={form.transaction_type} onChange={updateField("transaction_type")} required>
+                <option value="">Selecione</option>
+                <option value="INCOME">Receita</option>
+                <option value="EXPENSE">Despesa</option>
+              </select>
+            </label>
 
-                <div>
-                    <label>Categoria</label>
-                    <br />
-                    <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                    >
-                        <option value="">Selecione uma categoria</option>
+            <label className={styles.field}>
+              <span>Valor</span>
+              <input type="number" step="0.01" min="0" value={form.amount} onChange={updateField("amount")} required />
+            </label>
+          </div>
 
-                        {categories.map((cat) => (
-                            <option
-                                key={cat.value}
-                                value={cat.value}
-                            >
-                                {cat.label}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+          <label className={styles.field}>
+            <span>Data</span>
+            <input type="date" value={form.transaction_date} onChange={updateField("transaction_date")} required />
+          </label>
 
-                <br />
-
-                <div>
-                    <label>Valor</label>
-                    <br />
-                    <input
-                        type="number"
-                        step="0.01"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                    />
-                </div>
-
-                <br />
-
-                <div>
-                    <label>Data</label>
-                    <br />
-                    <input
-                        type="date"
-                        value={transactionDate}
-                        onChange={(e) => setTransactionDate(e.target.value)}
-                    />
-                </div>
-
-                <br />
-
-                <div>
-                    <label>Tipo</label>
-                    <br />
-                    <select
-                        value={transactionType}
-                        onChange={(e) => setTransactionType(e.target.value)}
-                    >
-                        <option value="">Selecione</option>
-                        <option value="INCOME">Receita</option>
-                        <option value="EXPENSE">Despesa</option>
-                    </select>
-                </div>
-
-                <br />
-
-                <button type="submit">
-                    Salvar Transação
-                </button>
-
-            </form>
-
-            <hr />
-
-            <h2>Lista de Transações</h2>
-
-            {
-                transactions.map(transaction => (
-                    <div key={transaction.id}>
-
-                        <p>
-                            <strong>ID:</strong> {transaction.id}
-                        </p>
-
-                        <p>
-                            <strong>Descrição:</strong> {transaction.description}
-                        </p>
-
-                        <p>
-                            <strong>Categoria:</strong>{" "}
-                            {getCategoryLabel(transaction.category)}
-                        </p>
-
-                        <p>
-                            <strong>Tipo:</strong> {transaction.transaction_type}
-                        </p>
-
-                        <p>
-                            <strong>Valor:</strong> R$ {transaction.amount}
-                        </p>
-
-                        <p>
-                            <strong>Data:</strong> {transaction.transaction_date}
-                        </p>
-
-                        <hr />
-
-                    </div>
-                ))
-            }
-
-        </div >
-
-    );
+          <Button icon={FiPlus} type="submit" disabled={saving}>
+            {saving ? "Salvando..." : "Registrar"}
+          </Button>
+        </form>
+      </Modal>
+    </div>
+  );
 }
