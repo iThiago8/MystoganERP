@@ -1,19 +1,47 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from '../components/Layout.jsx';
+import ProtectedRoute from '../components/ProtectedRoute.jsx';
+import AdminUsers from '../pages/AdminUsers';
 import Dashboard from '../pages/Dashboard';
+import Login from '../pages/Login';
+import Logistics from '../pages/Logistics';
 import ModulePlaceholder from '../pages/ModulePlaceholder';
 import Transactions from '../pages/Transactions';
+import Stock from '../pages/Stock';
+
+const ADMIN = ['admin'];
+const HR = ['hr', 'admin'];
+const STOCK = ['stock', 'admin'];
+const FINANCE = ['admin', 'manager'];
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
-        <Route path="financeiro" element={<Transactions />} />
-        <Route path="produtos" element={<ModulePlaceholder title="Produtos" />} />
-        <Route path="estoque" element={<ModulePlaceholder title="Estoque" />} />
-        <Route path="funcionarios" element={<ModulePlaceholder title="Funcionários" />} />
-        <Route path="configuracoes" element={<ModulePlaceholder title="Configurações" />} />
+
+        <Route
+          path="financeiro"
+          element={<ProtectedRoute roles={FINANCE}><Transactions /></ProtectedRoute>}
+        />
+        <Route
+          path="estoque"
+          element={<ProtectedRoute roles={STOCK}><Stock /></ProtectedRoute>}
+        />
+        <Route
+          path="logistica"
+          element={<ProtectedRoute roles={STOCK}><Logistics /></ProtectedRoute>}
+        />
+        <Route
+          path="funcionarios"
+          element={<ProtectedRoute roles={HR}><ModulePlaceholder title="Funcionários" /></ProtectedRoute>}
+        />
+        <Route
+          path="configuracoes"
+          element={<ProtectedRoute roles={ADMIN}><AdminUsers /></ProtectedRoute>}
+        />
         <Route path="*" element={<ModulePlaceholder title="Página não encontrada" />} />
       </Route>
     </Routes>

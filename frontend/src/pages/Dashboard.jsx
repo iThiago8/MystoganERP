@@ -3,7 +3,6 @@ import {
   FiTrendingUp,
   FiUsers,
   FiBox,
-  FiPlus,
   FiDownload
 } from "react-icons/fi";
 

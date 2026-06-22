@@ -1,6 +1,9 @@
 import Models.stock_movement
 import Models.product
 import Models.transaction
+import Models.delivery
+
+from sqlalchemy import text
 
 from Data.connection import SessionLocal, engine, Base
 from Models.user import User, UserRole
@@ -18,6 +21,16 @@ from Models.role import Role
 from Models.employee import Employee
 # Cria as tabelas no banco se ainda não existirem
 Base.metadata.create_all(bind=engine)
+
+with engine.begin() as connection:
+    connection.execute(text(
+        "ALTER TABLE products "
+        "ADD COLUMN IF NOT EXISTS minimum_quantity INTEGER NOT NULL DEFAULT 0"
+    ))
+    connection.execute(text(
+        "ALTER TABLE products "
+        "ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE"
+    ))
 
 db = SessionLocal()
 

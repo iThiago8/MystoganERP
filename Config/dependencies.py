@@ -11,6 +11,7 @@ from Repositories.department_repository import DepartmentRepository
 from Repositories.product_repository import ProductRepository
 from Repositories.stock_movement_repository import StockMovementRepository
 from Repositories.transaction_repository import TransactionRepository
+from Repositories.delivery_repository import DeliveryRepository
 from Services.auth_service import AuthService
 from Services.employee_service import EmployeeService
 from Services.role_service import RoleService
@@ -18,6 +19,7 @@ from Services.department_service import DepartmentService
 from Services.product_service import ProductService
 from Services.stock_movement_service import StockMovementService
 from Services.transaction_service import TransactionService
+from Services.delivery_service import DeliveryService
 from DTOs.auth_dto import TokenPayload
 from Models.user import UserRole
 from Utils.security import decode_access_token
@@ -49,6 +51,10 @@ def get_product_service(db: Session = Depends(get_db)) -> ProductService:
 
 def get_stock_movement_service(db: Session = Depends(get_db)) -> StockMovementService:
     return StockMovementService(StockMovementRepository(db), ProductRepository(db), db)
+
+
+def get_delivery_service(db: Session = Depends(get_db)) -> DeliveryService:
+    return DeliveryService(DeliveryRepository(db), ProductRepository(db), db)
 
 
 # --- Autenticação ---

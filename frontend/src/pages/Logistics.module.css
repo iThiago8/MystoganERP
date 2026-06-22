@@ -1,0 +1,281 @@
+.logistics {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.helper {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.notice {
+  padding: 12px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+}
+
+.noticeError {
+  color: var(--accent-danger);
+  background: var(--accent-danger-soft);
+  border-color: rgba(193, 18, 31, 0.28);
+}
+
+.noticeSuccess {
+  color: var(--accent-success);
+  background: var(--accent-success-soft);
+  border-color: rgba(45, 157, 103, 0.28);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.8fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.inlineFilter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inlineFilter span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.inlineFilter select,
+.field input,
+.field select,
+.field textarea {
+  min-height: 40px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-raised);
+  color: var(--text-primary);
+  font: inherit;
+  padding: 9px 11px;
+  outline: none;
+}
+
+.inlineFilter select:focus,
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--accent-gold);
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-align: left;
+  text-transform: uppercase;
+  padding: 0 12px 10px;
+}
+
+.table td {
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 14px 12px;
+  vertical-align: middle;
+}
+
+.name,
+.destination {
+  display: block;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.quantity {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+
+.table small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  margin-top: 3px;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rowActions button {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: border-color var(--transition-base), color var(--transition-base),
+    background var(--transition-base);
+}
+
+.rowActions button:hover:not(:disabled) {
+  background: var(--bg-hover-soft);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.rowActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.field textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+
+.twoColumns,
+.productSummary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.productSummary {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.productSummary div {
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-raised);
+  padding: 10px 12px;
+}
+
+.productSummary span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.productSummary strong {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+
+.ruleNote {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-hover-soft);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.5;
+  padding: 10px 12px;
+}
+
+.emptyCell {
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (max-width: 1180px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .inlineFilter {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .twoColumns,
+  .productSummary {
+    grid-template-columns: 1fr;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}

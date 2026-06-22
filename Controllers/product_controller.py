@@ -15,6 +15,14 @@ def list_products(
     return service.get_all()
 
 
+@router.get("/low-stock", response_model=list[ProductResponse])
+def list_low_stock_products(
+    service: ProductService = Depends(get_product_service),
+    _: TokenPayload = Depends(require_stock)
+):
+    return service.get_low_stock()
+
+
 @router.get("/{product_id}", response_model=ProductResponse)
 def get_product(
     product_id: int,

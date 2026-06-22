@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from pydantic import Field
 from typing import Optional
 
 
@@ -7,11 +8,14 @@ from typing import Optional
 class ProductCreate(BaseModel):
     name: str
     description: Optional[str] = None
+    minimum_quantity: int = Field(default=0, ge=0)
 
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
+    minimum_quantity: Optional[int] = Field(default=None, ge=0)
+    is_active: Optional[bool] = None
 
 
 class ProductResponse(BaseModel):
@@ -19,5 +23,8 @@ class ProductResponse(BaseModel):
     name: str
     description: Optional[str] = None
     quantity: int
+    minimum_quantity: int
+    is_active: bool
+    is_low_stock: bool
 
     model_config = {"from_attributes": True}
