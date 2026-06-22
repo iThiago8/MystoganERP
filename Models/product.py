@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
 from Data.connection import Base
-
+from sqlalchemy import Numeric
 
 class Product(Base):
     __tablename__ = "products"
@@ -12,6 +12,7 @@ class Product(Base):
     quantity = Column(Integer, nullable=False, default=0)
     minimum_quantity = Column(Integer, nullable=False, default=0)
     is_active = Column(Boolean, nullable=False, default=True)
+    price = Column(Numeric(10, 2), nullable=False, default = 0.00)
 
     # Um Product tem muitas StockMovements (histórico)
     movements = relationship("StockMovement", back_populates="product")

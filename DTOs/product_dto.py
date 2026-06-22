@@ -9,14 +9,14 @@ class ProductCreate(BaseModel):
     name: str
     description: Optional[str] = None
     minimum_quantity: int = Field(default=0, ge=0)
-
+    price: float = field (ge=0,0, description: "Preço unitário do produto")
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     minimum_quantity: Optional[int] = Field(default=None, ge=0)
     is_active: Optional[bool] = None
-
+    price: Optional[float] = Field(default=None, ge=0.0)
 
 class ProductResponse(BaseModel):
     id: int
@@ -26,5 +26,6 @@ class ProductResponse(BaseModel):
     minimum_quantity: int
     is_active: bool
     is_low_stock: bool
+    price: float
 
     model_config = {"from_attributes": True}
