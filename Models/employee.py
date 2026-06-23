@@ -11,9 +11,6 @@ class Employee(Base):
     phone = Column(String(20), nullable=True)
     hire_date = Column(Date, nullable=True)
     is_active = Column(Boolean, default=True)
-    role_id = Column(Integer, ForeignKey("roles.id"), nullable=True)
-
-
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True, unique=True)
     user = relationship("User", back_populates="employee")
 

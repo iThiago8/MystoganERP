@@ -9,7 +9,7 @@ const PAGE_TITLES = {
   '/financeiro': 'Financeiro',
   '/estoque': 'Estoque',
   '/logistica': 'Logística',
-  '/funcionarios': 'Funcionários',
+  '/rh': 'Gestão RH',
   '/configuracoes': 'Configurações',
 };
 

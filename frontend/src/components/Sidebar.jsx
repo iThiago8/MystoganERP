@@ -10,6 +10,7 @@ import {
   FiChevronsRight,
   FiX,
 } from 'react-icons/fi';
+import { useAuth } from '../auth/useAuth';
 import styles from './Sidebar.module.css';
 import logoImg from '../assets/MystoganERPLogo.png';
 
@@ -20,24 +21,34 @@ const NAV_GROUPS = [
   {
     title: 'Logística',
     items: [
-      { to: '/estoque', label: 'Estoque', icon: FiPackage },
-      { to: '/logistica', label: 'Entregas', icon: FiTruck },
+      { to: '/estoque', label: 'Estoque', icon: FiPackage, roles: ['stock', 'admin'] },
+      { to: '/logistica', label: 'Entregas', icon: FiTruck, roles: ['stock', 'admin'] },
     ],
   },
   {
     title: 'Financeiro',
-    items: [{ to: '/financeiro', label: 'Financeiro', icon: FiDollarSign }],
+    items: [{ to: '/financeiro', label: 'Financeiro', icon: FiDollarSign, roles: ['admin', 'manager'] }],
   },
   {
     title: 'Gestão',
     items: [
-      { to: '/funcionarios', label: 'Funcionários', icon: FiUsers },
-      { to: '/configuracoes', label: 'Configurações', icon: FiSettings },
+      { to: '/rh', label: 'Gestão RH', icon: FiUsers, roles: ['hr', 'admin'] },
+      { to: '/configuracoes', label: 'Configurações', icon: FiSettings, roles: ['admin'] },
     ],
   },
 ];
 
 export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
+  const { hasAnyRole } = useAuth();
+
+  const filteredGroups = NAV_GROUPS.map((group) => {
+    const visibleItems = group.items.filter((item) => {
+      if (!item.roles) return true;
+      return hasAnyRole(item.roles);
+    });
+    return { ...group, items: visibleItems };
+  }).filter((group) => group.items.length > 0);
+
   return (
     <aside
       className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''} ${mobileOpen ? styles.mobileOpen : ''
@@ -57,7 +68,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
       </div>
 
       <nav className={styles.nav}>
-        {NAV_GROUPS.map((group, index) => (
+        {filteredGroups.map((group, index) => (
           <div key={group.title ?? `group-${index}`} className={styles.navSection}>
             {group.title &&
               (collapsed ? (
