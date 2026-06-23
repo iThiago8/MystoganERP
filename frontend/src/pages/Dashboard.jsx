@@ -6,7 +6,9 @@ import {
   FiDownload,
   FiPackage,
   FiAlertTriangle,
-  FiTruck
+  FiTruck,
+  FiUserCheck,
+  FiBriefcase
 } from "react-icons/fi";
 
 import { useEffect, useState } from "react";
@@ -25,12 +27,18 @@ import styles from "./Dashboard.module.css";
 export default function Dashboard() {
   const { hasAnyRole } = useAuth();
   const canViewStock = hasAnyRole(["admin", "stock"]);
+  const canViewHR = hasAnyRole(["admin", "hr"]);
 
   const [transactions, setTransactions] = useState([]);
   const [productsCount, setProductsCount] = useState(null);
   const [lowStockCount, setLowStockCount] = useState(null);
   const [pendingDeliveriesCount, setPendingDeliveriesCount] = useState(null);
   const [loadingStock, setLoadingStock] = useState(false);
+
+  const [employeesCount, setEmployeesCount] = useState(null);
+  const [activeEmployeesCount, setActiveEmployeesCount] = useState(null);
+  const [departmentsCount, setDepartmentsCount] = useState(null);
+  const [loadingHR, setLoadingHR] = useState(false);
 
   useEffect(() => {
     api
@@ -64,7 +72,27 @@ export default function Dashboard() {
           setLoadingStock(false);
         });
     }
-  }, [canViewStock]);
+
+    if (canViewHR) {
+      setLoadingHR(true);
+      Promise.all([
+        api.get("/employees/"),
+        api.get("/departments/"),
+      ])
+        .then(([employeesRes, departmentsRes]) => {
+          setEmployeesCount(employeesRes.data.length);
+          const activeEmployees = employeesRes.data.filter((e) => e.is_active);
+          setActiveEmployeesCount(activeEmployees.length);
+          setDepartmentsCount(departmentsRes.data.length);
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar dados do RH no Dashboard:", error);
+        })
+        .finally(() => {
+          setLoadingHR(false);
+        });
+    }
+  }, [canViewStock, canViewHR]);
 
   const receitas = transactions
     .filter((t) => t.transaction_type === "INCOME")
@@ -275,6 +303,30 @@ export default function Dashboard() {
               label="Entregas Pendentes"
               value={loadingStock ? "..." : pendingDeliveriesCount ?? 0}
               tone={pendingDeliveriesCount > 0 ? "gold" : "default"}
+            />
+          </div>
+        </>
+      )}
+
+      {canViewHR && (
+        <>
+          <h2 className={styles.sectionTitle}>Gestão de Pessoas (RH)</h2>
+          <div className={styles.statsGrid}>
+            <StatCard
+              icon={FiUsers}
+              label="Total de Funcionários"
+              value={loadingHR ? "..." : employeesCount ?? 0}
+            />
+            <StatCard
+              icon={FiUserCheck}
+              label="Funcionários Ativos"
+              value={loadingHR ? "..." : activeEmployeesCount ?? 0}
+              tone={activeEmployeesCount > 0 ? "default" : "gold"}
+            />
+            <StatCard
+              icon={FiBriefcase}
+              label="Departamentos"
+              value={loadingHR ? "..." : departmentsCount ?? 0}
             />
           </div>
         </>
