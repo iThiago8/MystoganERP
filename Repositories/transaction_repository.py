@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from Models.Transaction import Transaction
+from Models.transaction import Transaction
 from Interfaces.i_transaction_repository import ITransactionRepository
 
 
@@ -11,7 +11,7 @@ class TransactionRepository(ITransactionRepository):
     def create(
         self,
         transaction: Transaction
-    ) -> Transaction:""
+    ) -> Transaction:
 
         self.session.add(transaction)
         self.session.commit()

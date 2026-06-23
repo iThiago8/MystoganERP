@@ -9,7 +9,7 @@ class ProductCreate(BaseModel):
     name: str
     description: Optional[str] = None
     minimum_quantity: int = Field(default=0, ge=0)
-    price: float = field (ge=0,0, description: "Preço unitário do produto")
+    price: float = Field (ge=0.0)
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
