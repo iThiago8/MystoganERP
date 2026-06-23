@@ -9,11 +9,14 @@ import ModulePlaceholder from '../pages/ModulePlaceholder';
 import Transactions from '../pages/Transactions';
 import Stock from '../pages/Stock';
 import GestaoRH from '../pages/hr/HRManagement.jsx';
+import Orders from '../pages/Orders';
+import Partners from '../pages/Partners';
 
 const ADMIN = ['admin'];
 const HR = ['hr', 'admin'];
 const STOCK = ['stock', 'admin'];
 const FINANCE = ['admin', 'manager'];
+const COMMERCIAL = ['admin', 'manager', 'stock'];
 
 export default function AppRoutes() {
   return (
@@ -22,6 +25,15 @@ export default function AppRoutes() {
 
       <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
+
+        <Route
+          path="pedidos"
+          element={<ProtectedRoute roles={COMMERCIAL}><Orders /></ProtectedRoute>}
+        />
+        <Route
+          path="parceiros"
+          element={<ProtectedRoute roles={COMMERCIAL}><Partners /></ProtectedRoute>}
+        />
 
         <Route
           path="financeiro"

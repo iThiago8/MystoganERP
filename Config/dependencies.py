@@ -12,6 +12,8 @@ from Repositories.product_repository import ProductRepository
 from Repositories.stock_movement_repository import StockMovementRepository
 from Repositories.transaction_repository import TransactionRepository
 from Repositories.delivery_repository import DeliveryRepository
+from Repositories.order_repository import OrderRepository
+from Repositories.partner_repository import PartnerRepository
 from Services.auth_service import AuthService
 from Services.employee_service import EmployeeService
 from Services.role_service import RoleService
@@ -20,16 +22,10 @@ from Services.product_service import ProductService
 from Services.stock_movement_service import StockMovementService
 from Services.transaction_service import TransactionService
 from Services.delivery_service import DeliveryService
+from Services.order_service import OrderService
 from DTOs.auth_dto import TokenPayload
 from Models.user import UserRole
 from Utils.security import decode_access_token
-from fastapi import Depends
-from sqlalchemy.orm import Session
-from Data.connection import get_db
-from Repositories.order_repository import OrderRepository
-from Repositories.product_repository import ProductRepository
-from Repositories.stock_movement_repository import StockMovementRepository
-from Services.order_service import OrderService
 
 http_bearer = HTTPBearer()
 
@@ -62,6 +58,21 @@ def get_stock_movement_service(db: Session = Depends(get_db)) -> StockMovementSe
 
 def get_delivery_service(db: Session = Depends(get_db)) -> DeliveryService:
     return DeliveryService(DeliveryRepository(db), ProductRepository(db), db)
+
+
+def get_order_service(db: Session = Depends(get_db)) -> OrderService:
+    order_repo = OrderRepository(db)
+    product_repo = ProductRepository(db)
+    stock_repo = StockMovementRepository(db)
+    return OrderService(order_repo, product_repo, stock_repo)
+
+
+def get_transaction_repository(db: Session = Depends(get_db)) -> TransactionRepository:
+    return TransactionRepository(db)
+
+
+def get_transaction_service(repository: TransactionRepository = Depends(get_transaction_repository)) -> TransactionService:
+    return TransactionService(repository)
 
 
 # --- Autenticação ---
@@ -110,16 +121,6 @@ def require_admin(current_user: TokenPayload = Depends(get_current_user)) -> Tok
     return current_user
 
 
-def get_transaction_repository(db: Session = Depends(get_db)) -> TransactionRepository:
-
-    return TransactionRepository(db)
-
-
-def get_transaction_service(repository: TransactionRepository = Depends(get_transaction_repository)) -> TransactionService:
-
-    return TransactionService(repository)
-
-
 class RoleChecker:
     def __init__(self, allowed_roles: List[UserRole]):
         self.allowed_roles = allowed_roles
@@ -131,10 +132,3 @@ class RoleChecker:
                 detail="Operação não permitida. Privilégios insuficientes."
             )
         return user_payload
-
-
-def get_order_service(db: Session = Depends(get_db)) -> OrderService:
-    order_repo = OrderRepository(db)
-    product_repo = ProductRepository(db)
-    stock_repo = StockMovementRepository(db)
-    return OrderService(order_repo, product_repo, stock_repo)

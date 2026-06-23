@@ -8,8 +8,11 @@ class PartnerRepository(IPartnerRepository):
     def __init__(self, db: Session):
         self.db = db
 
-    def get_all(self) -> List[Partner]:
-        return self.db.query(Partner).all()
+    def get_all(self, active_only: bool = True) -> List[Partner]:
+        query = self.db.query(Partner)
+        if active_only:
+            query = query.filter(Partner.is_active == True)
+        return query.all()
 
     def get_by_id(self, partner_id: int) -> Optional[Partner]:
         return self.db.query(Partner).filter(Partner.id == partner_id).first()

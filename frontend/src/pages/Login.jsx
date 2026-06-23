@@ -47,11 +47,12 @@ export default function Login() {
           </div>
         </div>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
           <label className={styles.field}>
             <span>E-mail</span>
             <input
               type="email"
+              autoComplete="off"
               value={form.email}
               onChange={(event) => setForm({ ...form, email: event.target.value })}
               required
@@ -62,6 +63,7 @@ export default function Login() {
             <span>Senha</span>
             <input
               type="password"
+              autoComplete="off"
               value={form.password}
               onChange={(event) => setForm({ ...form, password: event.target.value })}
               required

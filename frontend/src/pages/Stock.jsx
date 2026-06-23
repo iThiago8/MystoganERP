@@ -23,6 +23,7 @@ const emptyProductForm = {
   name: "",
   description: "",
   minimum_quantity: 0,
+  price: "",
   is_active: true,
 };
 
@@ -148,6 +149,7 @@ export default function Stock() {
       name: productForm.name,
       description: productForm.description || null,
       minimum_quantity: Number(productForm.minimum_quantity || 0),
+      price: Number(productForm.price || 0),
       is_active: productForm.is_active,
     };
 
@@ -176,6 +178,7 @@ export default function Stock() {
       name: product.name,
       description: product.description || "",
       minimum_quantity: product.minimum_quantity,
+      price: product.price ?? "",
       is_active: product.is_active,
     });
   };
@@ -268,6 +271,7 @@ export default function Stock() {
               <thead>
                 <tr>
                   <th>Produto</th>
+                  <th>Preço</th>
                   <th>Saldo</th>
                   <th>Mínimo</th>
                   <th>Status</th>
@@ -288,6 +292,9 @@ export default function Stock() {
                       {product.description && (
                         <span className={styles.description}>{product.description}</span>
                       )}
+                    </td>
+                    <td>
+                      R$ {Number(product.price || 0).toFixed(2)}
                     </td>
                     <td>
                       <strong className={styles.quantity}>{product.quantity}</strong>
@@ -326,7 +333,7 @@ export default function Stock() {
 
                 {!products.length && (
                   <tr>
-                    <td colSpan="6" className={styles.emptyCell}>
+                    <td colSpan="7" className={styles.emptyCell}>
                       Nenhum produto cadastrado.
                     </td>
                   </tr>
@@ -354,6 +361,20 @@ export default function Stock() {
                 value={productForm.description}
                 onChange={(event) => setProductForm({ ...productForm, description: event.target.value })}
                 rows={3}
+              />
+            </label>
+
+            <label className={styles.field}>
+              <span>Preço unitário</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={productForm.price}
+                onChange={(event) =>
+                  setProductForm({ ...productForm, price: event.target.value })
+                }
+                required
               />
             </label>
 

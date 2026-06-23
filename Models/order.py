@@ -11,7 +11,7 @@ class Order(Base):
     status = Column(String(20), default="PENDING", nullable=False) 
     date = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     total_value = Column(Float, default=0.0, nullable=False)
-    partner_id = Column(Integer, ForeignKey("partners.id"), nullable=False)
+    partner_id = Column(Integer, ForeignKey("bussines_partners.id"), nullable=False)
 
     partner = relationship("Partner", back_populates="orders") 
     items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")

@@ -9,6 +9,8 @@ import {
   FiChevronsLeft,
   FiChevronsRight,
   FiX,
+  FiShoppingCart,
+  FiBriefcase,
 } from 'react-icons/fi';
 import { useAuth } from '../auth/useAuth';
 import styles from './Sidebar.module.css';
@@ -17,6 +19,13 @@ import logoImg from '../assets/MystoganERPLogo.png';
 const NAV_GROUPS = [
   {
     items: [{ to: '/', label: 'Dashboard', icon: FiGrid, end: true }],
+  },
+  {
+    title: 'Comercial',
+    items: [
+      { to: '/pedidos', label: 'Pedidos', icon: FiShoppingCart, roles: ['admin', 'manager', 'stock'] },
+      { to: '/parceiros', label: 'Parceiros', icon: FiBriefcase, roles: ['admin', 'manager', 'stock'] },
+    ],
   },
   {
     title: 'Logística',
