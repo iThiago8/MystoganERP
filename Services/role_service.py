@@ -53,5 +53,12 @@ class RoleService:
         return self.repository.save(role)
 
     def delete(self, role_id: int) -> None:
+        from sqlalchemy.exc import IntegrityError
         role = self.get_by_id(role_id)
-        self.repository.delete(role)
+        try:
+            self.repository.delete(role)
+        except IntegrityError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Não é possível excluir o cargo pois existem funcionários associados a ele."
+            )

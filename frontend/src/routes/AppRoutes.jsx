@@ -8,6 +8,7 @@ import Logistics from '../pages/Logistics';
 import ModulePlaceholder from '../pages/ModulePlaceholder';
 import Transactions from '../pages/Transactions';
 import Stock from '../pages/Stock';
+import GestaoRH from '../pages/hr/HRManagement.jsx';
 
 const ADMIN = ['admin'];
 const HR = ['hr', 'admin'];
@@ -35,8 +36,8 @@ export default function AppRoutes() {
           element={<ProtectedRoute roles={STOCK}><Logistics /></ProtectedRoute>}
         />
         <Route
-          path="funcionarios"
-          element={<ProtectedRoute roles={HR}><ModulePlaceholder title="Funcionários" /></ProtectedRoute>}
+          path="rh"
+          element={<ProtectedRoute roles={HR}><GestaoRH /></ProtectedRoute>}
         />
         <Route
           path="configuracoes"
