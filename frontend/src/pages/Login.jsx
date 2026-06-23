@@ -5,6 +5,7 @@ import { FiLogIn } from "react-icons/fi";
 import { useAuth } from "../auth/useAuth";
 import Button from "../components/ui/Button";
 import styles from "./Login.module.css";
+import logoImg from "../assets/MystoganERPLogo.png";
 
 export default function Login() {
   const { isAuthenticated, login } = useAuth();
@@ -39,7 +40,7 @@ export default function Login() {
     <main className={styles.page}>
       <section className={styles.panel}>
         <div className={styles.brand}>
-          <div className={styles.brandMark}>M</div>
+          <img src={logoImg} alt="Mystogan Logo" className={styles.brandMark} />
           <div>
             <span className={styles.brandName}>Mystogan ERP</span>
             <span className={styles.brandTag}>Acesso ao sistema</span>

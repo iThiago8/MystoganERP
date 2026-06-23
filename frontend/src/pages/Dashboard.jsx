@@ -3,13 +3,17 @@ import {
   FiTrendingUp,
   FiUsers,
   FiBox,
-  FiDownload
+  FiDownload,
+  FiPackage,
+  FiAlertTriangle,
+  FiTruck
 } from "react-icons/fi";
 
 import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import api from "../services/api";
+import { useAuth } from "../auth/useAuth";
 
 import Card from "../components/ui/Card";
 import StatCard from "../components/ui/StatCard";
@@ -19,7 +23,14 @@ import Button from "../components/ui/Button";
 import styles from "./Dashboard.module.css";
 
 export default function Dashboard() {
+  const { hasAnyRole } = useAuth();
+  const canViewStock = hasAnyRole(["admin", "stock"]);
+
   const [transactions, setTransactions] = useState([]);
+  const [productsCount, setProductsCount] = useState(null);
+  const [lowStockCount, setLowStockCount] = useState(null);
+  const [pendingDeliveriesCount, setPendingDeliveriesCount] = useState(null);
+  const [loadingStock, setLoadingStock] = useState(false);
 
   useEffect(() => {
     api
@@ -30,7 +41,30 @@ export default function Dashboard() {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+
+    if (canViewStock) {
+      setLoadingStock(true);
+      Promise.all([
+        api.get("/products/"),
+        api.get("/products/low-stock"),
+        api.get("/deliveries/"),
+      ])
+        .then(([productsRes, lowStockRes, deliveriesRes]) => {
+          const activeProducts = productsRes.data.filter((p) => p.is_active);
+          setProductsCount(activeProducts.length);
+          setLowStockCount(lowStockRes.data.length);
+          
+          const pendingDeliveries = deliveriesRes.data.filter((d) => d.status === "PENDENTE");
+          setPendingDeliveriesCount(pendingDeliveries.length);
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar dados do estoque no Dashboard:", error);
+        })
+        .finally(() => {
+          setLoadingStock(false);
+        });
+    }
+  }, [canViewStock]);
 
   const receitas = transactions
     .filter((t) => t.transaction_type === "INCOME")
@@ -47,6 +81,12 @@ export default function Dashboard() {
     const d = new Date();
     d.setDate(d.getDate() - (6 - i));
     return d.toISOString().split("T")[0];
+  });
+
+  // Labels "DD/MM" para exibir abaixo de cada barra
+  const chartLabels = last7Days.map((dia) => {
+    const [, month, day] = dia.split("-");
+    return `${day}/${month}`;
   });
 
   // Soma o amount de cada dia (suporta datas com ou sem horário)
@@ -89,7 +129,7 @@ export default function Dashboard() {
     const geradoEm = new Date().toLocaleString("pt-BR");
 
     // ── Cabeçalho ──────────────────────────────────────────────────────
-    doc.setFillColor(31, 78, 121); // azul escuro
+    doc.setFillColor(31, 78, 121);
     doc.rect(0, 0, 210, 28, "F");
 
     doc.setTextColor(255, 255, 255);
@@ -168,7 +208,6 @@ export default function Dashboard() {
         4: { cellWidth: 30, halign: "right" },
       },
       didParseCell(data) {
-        // Colorir coluna Tipo
         if (data.section === "body" && data.column.index === 3) {
           data.cell.styles.textColor =
             data.cell.raw === "Receita" ? [22, 120, 60] : [180, 40, 40];
@@ -209,11 +248,37 @@ export default function Dashboard() {
         </div>
       </div>
 
+      <h2 className={styles.sectionTitle}>Resumo Financeiro</h2>
       <div className={styles.statsGrid}>
         {stats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
       </div>
+
+      {canViewStock && (
+        <>
+          <h2 className={styles.sectionTitle}>Estoque & Logística</h2>
+          <div className={styles.statsGrid}>
+            <StatCard
+              icon={FiPackage}
+              label="Produtos Ativos"
+              value={loadingStock ? "..." : productsCount ?? 0}
+            />
+            <StatCard
+              icon={FiAlertTriangle}
+              label="Alerta Estoque Baixo"
+              value={loadingStock ? "..." : lowStockCount ?? 0}
+              tone={lowStockCount > 0 ? "gold" : "default"}
+            />
+            <StatCard
+              icon={FiTruck}
+              label="Entregas Pendentes"
+              value={loadingStock ? "..." : pendingDeliveriesCount ?? 0}
+              tone={pendingDeliveriesCount > 0 ? "gold" : "default"}
+            />
+          </div>
+        </>
+      )}
 
       <div className={styles.grid}>
         <Card
@@ -228,6 +293,7 @@ export default function Dashboard() {
                   className={styles.bar}
                   style={{ height: `${v}%` }}
                 />
+                <span className={styles.barLabel}>{chartLabels[i]}</span>
               </div>
             ))}
           </div>

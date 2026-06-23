@@ -11,6 +11,7 @@ import {
   FiX,
 } from 'react-icons/fi';
 import styles from './Sidebar.module.css';
+import logoImg from '../assets/MystoganERPLogo.png';
 
 const NAV_GROUPS = [
   {
@@ -39,12 +40,11 @@ const NAV_GROUPS = [
 export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
   return (
     <aside
-      className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''} ${
-        mobileOpen ? styles.mobileOpen : ''
-      }`}
+      className={`${styles.sidebar} ${collapsed ? styles.collapsed : ''} ${mobileOpen ? styles.mobileOpen : ''
+        }`}
     >
       <div className={styles.brand}>
-        <div className={styles.brandMark}>M</div>
+        <img src={logoImg} alt="Mystogan Logo" className={styles.brandMark} />
         {!collapsed && (
           <div className={styles.brandText}>
             <span className={styles.brandName}>Mystogan</span>
