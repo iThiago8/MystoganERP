@@ -89,10 +89,24 @@ class EmployeeService:
         
         for field, value in update_data.items():
             setattr(employee, field, value)
+            
+        if "is_active" in update_data and employee.user:
+            employee.user.is_active = update_data["is_active"]
         
         return self.employee_repo.save(employee)
 
     def delete(self, employee_id: int) -> None:
         employee = self.get_by_id(employee_id)
         
-        self.employee_repo.delete(employee)
+        user = employee.user
+        try:
+            self.db.delete(employee)
+            if user:
+                self.db.delete(user)
+            self.db.commit()
+        except Exception:
+            self.db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Erro ao deletar funcionário e usuário associado."
+            )
