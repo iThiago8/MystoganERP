@@ -44,5 +44,12 @@ class DepartmentService:
         return self.repository.save(department)
 
     def delete(self, department_id: int) -> None:
+        from sqlalchemy.exc import IntegrityError
         department = self.get_by_id(department_id)
-        self.repository.delete(department)
+        try:
+            self.repository.delete(department)
+        except IntegrityError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Não é possível excluir o departamento pois existem cargos associados a ele."
+            )
