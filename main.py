@@ -1,5 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
+from Data.connection import engine, Base
+from Models.partner import Partner
+from Models.product import Product
+from Models.stock_movement import StockMovement
+from Models.order import Order, OrderItem
 
 
 # Importa os controllers
@@ -11,7 +17,8 @@ from Controllers import (
     product_controller,
     stock_movement_controller,
     transaction_controller,
-    delivery_controller
+    delivery_controller,
+    partner_controller
 )
 
 
@@ -30,7 +37,7 @@ app.include_router(product_controller.router)
 app.include_router(stock_movement_controller.router)
 app.include_router(transaction_controller.router)
 app.include_router(delivery_controller.router)
-
+app.include_router(partner_controller.router)
 
 @app.get("/", tags=["Health"])
 def health_check():
@@ -46,3 +53,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+Base.metadata.create_all(bind=engine)
+
+from Controllers import auth_controller, order_controller 
+app = FastAPI(title="MystoganERP API")
+app.include_router(order_controller.router)

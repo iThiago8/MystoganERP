@@ -11,6 +11,6 @@ class Partner(Base):
     cpf_cnpj = Column(String(150), nullable=False, unique=True, index=True)
     phone =  Column(String(20), nullable=True)
     #Clientes não são "Excluídos", somente desativados.
-    is_active = Column(Boolean, defalut=True)
+    is_active = Column(Boolean, default=True)
 
-    #sales = relationship("Sale", back_populates="client")
+    orders = relationship("Order", back_populates="partner")

@@ -23,6 +23,13 @@ from Services.delivery_service import DeliveryService
 from DTOs.auth_dto import TokenPayload
 from Models.user import UserRole
 from Utils.security import decode_access_token
+from fastapi import Depends
+from sqlalchemy.orm import Session
+from Data.connection import get_db
+from Repositories.order_repository import OrderRepository
+from Repositories.product_repository import ProductRepository
+from Repositories.stock_movement_repository import StockMovementRepository
+from Services.order_service import OrderService
 
 http_bearer = HTTPBearer()
 
@@ -124,3 +131,10 @@ class RoleChecker:
                 detail="Operação não permitida. Privilégios insuficientes."
             )
         return user_payload
+
+
+def get_order_service(db: Session = Depends(get_db)) -> OrderService:
+    order_repo = OrderRepository(db)
+    product_repo = ProductRepository(db)
+    stock_repo = StockMovementRepository(db)
+    return OrderService(order_repo, product_repo, stock_repo)

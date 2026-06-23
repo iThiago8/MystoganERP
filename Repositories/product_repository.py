@@ -54,3 +54,4 @@ class ProductRepository(IProductRepository):
     def delete(self, product: Product) -> None:
         self.db.delete(product)
         self.db.commit()
+
